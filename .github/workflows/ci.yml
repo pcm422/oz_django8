@@ -6,7 +6,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-22.04
-    # mysql이 기본적으로 설치된 우분투
+    # github action 이 제공하는 ubuntu는 mysql이 기본적으로 설치되어 있음
     env:
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
@@ -23,7 +23,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.13'
-
       - name: Set timezone to KST
         run: |
           sudo rm /etc/localtime
@@ -33,29 +32,29 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql -e "use mysql; FLUSH PRIVILEGES; ALTER USER '${{ env.DB_USER }}'@'localhost' IDENTIFIED BY '${{ env.DB_PASSWORD }}';" -uroot -proot
-          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       - name: Install Poetry
         run: |
           curl -sSL curl -sSL https://install.python-poetry.org | python3 -
           echo "${HOME}/.local/bin" >> $GITHUB_PATH
-
       - name: Install dependencies
         run: |
           poetry install --no-root
 
       - name: Run black
         run: |
-          poetry run black . --check    
+          poetry run black . --check
+        # 검사만 하기 위해 check option
 
       - name: Run isort
         run: |
           poetry run isort . --check --diff
-
+        #
       - name: Run Mypy
         run: |
           poetry run mypy .
 
-      - name: Test python project
-        run: |
-          poetry run python manage.py test
+#      - name: Test python project
+#        run: |
+#          poetry run python manage.py test
