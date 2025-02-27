@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 
 from tabom.models import Article, User
@@ -17,3 +18,13 @@ class TestLikeService(TestCase):
         self.assertIsNotNone(like.id)
         self.assertEqual(user.id, like.user_id)
         self.assertEqual(article.id, like.article_id)
+
+    def test_a_user_can_like_an_article_only_once(self) -> None:
+        # Given - 테스트에 필요한 재료를 준비
+        user = User.objects.create(name="test")
+        article = Article.objects.create(title="test_title")
+
+        # Expect
+        like1 = do_like(user.id, article.id)
+        with self.assertRaises(IntegrityError):
+            like2 = do_like(user.id, article.id)
