@@ -11,7 +11,7 @@ jobs:
       DB_HOST: 127.0.0.1
       DB_PORT: 3306
       DB_USER: root
-      DB_PASSWORD: 1234
+      DB_PASSWORD: oz-password
       DB_DATABASE: oz_django
 
     steps:

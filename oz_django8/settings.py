@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+import pymysql
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "tabom.apps.TabomConfig",
 ]
 
 MIDDLEWARE = [
@@ -71,14 +74,17 @@ WSGI_APPLICATION = "oz_django8.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+pymysql.install_as_MySQLdb()
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "oz_django",
+        "USER": "root",
+        "PASSWORD": "oz-password",
+        "HOST": "localhost",
+        "PORT": "3306",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -104,11 +110,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
