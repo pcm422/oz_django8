@@ -1,3 +1,4 @@
+from django.core.exceptions import BadRequest
 from django.db import IntegrityError
 from django.test import TestCase
 
@@ -28,3 +29,29 @@ class TestLikeService(TestCase):
         like1 = do_like(user.id, article.id)
         with self.assertRaises(IntegrityError):
             like2 = do_like(user.id, article.id)
+
+    def test_it_should_raise_exception_when_like_an_user_does_not_exist(
+        self,
+    ) -> None:
+        # Given
+        invalid_user_id = 9988
+        article = Article.objects.create(title="test_title")
+
+        # Expect
+        with self.assertRaises(BadRequest) as e:
+            do_like(invalid_user_id, article.id)
+
+        self.assertEqual(str(e.exception), "없는 user_id 입니다: 9988")
+
+    def test_it_should_raise_exception_when_like_an_article_does_not_exist(
+        self,
+    ) -> None:
+        # Given
+        user = User.objects.create(name="test")
+        invalid_article_id = 9988
+
+        # Expect
+        with self.assertRaises(BadRequest) as e:
+            do_like(user.id, invalid_article_id)
+
+        self.assertEqual(str(e.exception), "없는 article_id 입니다: 9988")
