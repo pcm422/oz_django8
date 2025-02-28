@@ -15,3 +15,7 @@ def do_like(user_id: int, article_id: int) -> Like:
         # if "중복에 의한 integrity error 검사" in e.args[1]:
         #     raise BadRequest(f"이미 좋아요 하셨습니다.")
         raise
+
+
+def undo_like(user_id: int, article_id: int) -> None:
+    Like.objects.filter(user_id=user_id, article_id=article_id).delete()
