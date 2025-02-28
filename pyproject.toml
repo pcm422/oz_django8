@@ -48,3 +48,13 @@ ignore_errors = true
 
 [tool.django-stubs]
 django_settings_module = "oz_django8.settings"
+
+[tool.coverage.report]
+fail_under = 80
+
+[tool.coverage.run]
+omit = [
+  ".mypy_cache/**/*",
+  "*/migrations/*",
+  "*/*test*.py",
+]
